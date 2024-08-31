@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 # Iniciando a aplicação e o banco
@@ -14,9 +14,20 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=True)
 
 
-@app.route('/')
-def hello_word():
-    return 'Hello word'
+@app.route('/api/products/add', methods=["POST"])
+def add_product():
+    data = request.get_json()
+    if 'name' in data and 'price' in data:
+        product = Product(
+            name=data["name"],
+            price=data["price"],
+            description=data.get("description", "")
+        )
+        db.session.add(product)
+        db.session.commit()
+        return jsonify({"message": "Product added successfully"}), 200
+    return jsonify({"message": "invalid product data"}), 400
+
 
 
 if __name__ == "__main__":
