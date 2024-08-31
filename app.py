@@ -28,7 +28,9 @@ def add_product():
         return jsonify({"message": "Product added successfully"}), 200
     return jsonify({"message": "invalid product data"}), 400
 
-
+@app.route('/api/products/delete/<int:product_id>', methods=["DELETE"])
+def delete_product(product_id: int):
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)
