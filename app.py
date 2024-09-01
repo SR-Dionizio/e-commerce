@@ -34,10 +34,23 @@ def delete_product(product_id: int):
     product = Product.query.get(product_id)
     if product:
         db.session.delete(product)
-        db.session.commit() 
+        db.session.commit()
         return jsonify({"message": "Product deleted successfully"}), 200
     return jsonify({"message": "product not found"}), 404
-    
+
+
+@app.route("/api/products/<int:product_id>", methods=["GET"])
+def get_products_details(product_id: int):
+    product = Product.query.get(product_id)
+    if product:
+        return jsonify({
+            "id": product.id,
+            "name": product.name,
+            "price": product.price,
+            "description": product.description
+        })
+    return jsonify({"message": "product not found"}), 404
+
 
 if __name__ == "__main__":
     app.run(debug=True)
