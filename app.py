@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 # Iniciando a aplicação e o banco
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///e-commerce.db'
 db = SQLAlchemy(app)
+CORS(app)
 
 
 class Product(db.Model):
@@ -50,6 +52,23 @@ def get_products_details(product_id: int):
             "description": product.description
         })
     return jsonify({"message": "product not found"}), 404
+
+@app.route('/api/products/update/<int:product_id>', methods=["PUT"])
+def update_products(product_id: int):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({"message": "Product not found"}), 404
+    data = request.get_json()
+    if "name" in data:
+        product.name = data["name"]
+    if "price" in data:
+        product.price = data["price"]
+    if "description" in data:
+        product.description = data['description']
+
+    db.session.commit()
+
+    return jsonify({"message": "product updated successfully"})
 
 
 if __name__ == "__main__":
