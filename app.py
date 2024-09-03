@@ -70,6 +70,19 @@ def update_products(product_id: int):
 
     return jsonify({"message": "product updated successfully"})
 
+@app.route('/api/products', methods=["GET"])
+def get_products():
+    products = Product.query.all()
+    product_list = []
+    for product in products:
+        product_list.append({
+            "id": product.id,
+            "name": product.name,
+            "price": product.price,
+            "description": None if not product.description else product.description
+        })
+    return jsonify(product_list)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
