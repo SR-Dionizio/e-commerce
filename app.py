@@ -191,6 +191,18 @@ def view_cart():
                             })
     return jsonify(cart_content)
 
+@app.route('/api/cart/checkout', methods=['POST'])
+@login_required
+def cehckout():
+    user = User.query.get(int(current_user.id))
+    cart_items = user.cart
+    for cart_item in cart_items:
+        db.session.delete(cart_item)
+    db.session.commit()
+    return jsonify({'mensage':'Checkout successful. Cart has been cleared.'})
+
+    
+
 
 
 if __name__ == "__main__":
