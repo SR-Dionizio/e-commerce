@@ -1,12 +1,19 @@
 # Importação
+import os
+
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
+secret_key = os.getenv('SECRET_KEY')
+db_string = os.getenv('DB_STRING_CONN')
 
 application = Flask(__name__)
-application.config['SECRET_KEY'] = "minha_chave_123"
-application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
+application.config['SECRET_KEY'] = secret_key
+application.config['SQLALCHEMY_DATABASE_URI'] = db_string
 
 login_manager = LoginManager()
 db = SQLAlchemy(application)
